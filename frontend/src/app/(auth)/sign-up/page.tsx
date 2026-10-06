@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
 const page = () => {
@@ -10,6 +11,8 @@ const page = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
 
+  const router = useRouter();
+
   const handleSignup = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -17,7 +20,7 @@ const page = () => {
     setMessage("");
 
     try {
-      const response = await fetch("/api/signup", {
+      const response = await fetch("http://localhost:8000/auth/signup", {
         method: "POST",
 
         headers: {
@@ -35,6 +38,7 @@ const page = () => {
 
       if (response.ok) {
         setMessage("Account created successfully");
+        router.push("/sign-in");
       } else {
         setMessage(data.message || "Signup failed");
       }

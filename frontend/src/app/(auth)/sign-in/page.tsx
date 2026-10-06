@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
 const page = () => {
@@ -9,6 +10,8 @@ const page = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
 
+  const router = useRouter();
+
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -16,7 +19,7 @@ const page = () => {
     setMessage("");
 
     try {
-      const response = await fetch("/api/login", {
+      const response = await fetch("http://localhost:8000/auth/login", {
         method: "POST",
 
         headers: {
@@ -32,7 +35,9 @@ const page = () => {
       const data = await response.json();
 
       if (response.ok) {
+        localStorage.setItem("token", data.access_token);
         setMessage("Login successful");
+        router.push("/dashboard");
       } else {
         setMessage(data.message || "Login failed");
       }
